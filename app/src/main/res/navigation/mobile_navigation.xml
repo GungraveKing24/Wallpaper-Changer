@@ -9,7 +9,7 @@
         android:id="@+id/navigation_folder"
         android:name="com.example.walpaperschangermanager.ui.folder.FolderFragment"
         android:label="@string/title_folders"
-        tools:layout="@layout/fragment_folder" />
+        tools:layout="@layout/fragment_folder"/>
 
     <fragment
         android:id="@+id/navigation_home"

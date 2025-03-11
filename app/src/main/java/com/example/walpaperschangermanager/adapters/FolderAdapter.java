@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,10 +20,16 @@ import java.util.ArrayList;
 public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderViewHolder> {
     private ArrayList<Folder> folderList;
     private Context context;
+    private OnFolderClickListener listener;
 
-    public FolderAdapter(ArrayList<Folder> folderList, Context context) {
+    public interface OnFolderClickListener {
+        void onFolderClick(String folderName);
+    }
+
+    public FolderAdapter(ArrayList<Folder> folderList, Context context, OnFolderClickListener listener) {
         this.folderList = folderList;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -42,6 +49,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.FolderView
         } else {
             holder.imageView.setImageResource(R.drawable.default_folder);
         }
+        holder.itemView.setOnClickListener(v -> listener.onFolderClick(folder.getName()));
     }
 
     @Override

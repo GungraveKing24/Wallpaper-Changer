@@ -24,4 +24,10 @@
         android:src="@android:drawable/ic_input_add"
         tools:ignore="MissingConstraints" />
 
+    <FrameLayout
+        android:id="@+id/childFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
 </RelativeLayout>

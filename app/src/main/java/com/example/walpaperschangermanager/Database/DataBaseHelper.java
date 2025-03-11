@@ -23,12 +23,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_IMAGE + " TEXT)";
+
+        String createTableImages = "CREATE TABLE images ("+
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "folder_id INTEGER, " +
+                "image_path TEXT NOT NULL, " +
+                "new_image_path TEXT," +
+                "FOREIGN KEY(folder_id) REFERENCES folders(id))";
+
         db.execSQL(createTable);
+        db.execSQL(createTableImages);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS images");
         onCreate(db);
     }
 }

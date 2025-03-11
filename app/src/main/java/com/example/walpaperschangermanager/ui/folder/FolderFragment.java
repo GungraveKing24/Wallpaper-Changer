@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.walpaperschangermanager.Database.DatabaseMethods;
+import com.example.walpaperschangermanager.R;
 import com.example.walpaperschangermanager.adapters.FolderAdapter;
 import com.example.walpaperschangermanager.databinding.FragmentFolderBinding;
+import com.example.walpaperschangermanager.fragments.ImagesFragment;
 import com.example.walpaperschangermanager.models.Folder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -23,8 +25,6 @@ import java.util.ArrayList;
 
 public class FolderFragment extends Fragment {
     private FragmentFolderBinding binding;
-
-    // Controles
     private RecyclerView recyclerView;
     private FolderAdapter adapter;
     private DatabaseMethods dbmethods;
@@ -33,7 +33,6 @@ public class FolderFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FolderViewModel fragmentViewModel = new ViewModelProvider(this).get(FolderViewModel.class);
-
         binding = FragmentFolderBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -55,9 +54,23 @@ public class FolderFragment extends Fragment {
     }
 
     private void loadFolders() {
-        folderList = dbmethods.getAllFolders(); // Obtener carpetas de la base de datos
-        adapter = new FolderAdapter(folderList, getContext()); // Pasar la lista correctamente
+        folderList = dbmethods.getAllFolders();
+        adapter = new FolderAdapter(folderList, getContext(), this::OpenImageFragment);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void OpenImageFragment(String folderName) {
+        // Ocultar lista de carpetas y botón flotante
+        binding.recyclerView.setVisibility(View.GONE);
+        binding.fabAdd.setVisibility(View.GONE);
+        binding.childFragmentContainer.setVisibility(View.VISIBLE);
+
+        ImagesFragment imagesFragment = ImagesFragment.newInstance(folderName);
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.childFragmentContainer, imagesFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void showAddFolderDialog() {
@@ -81,11 +94,18 @@ public class FolderFragment extends Fragment {
         builder.show();
     }
 
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Volver a mostrar la lista de carpetas y botón flotante cuando se regresa
+        binding.recyclerView.setVisibility(View.VISIBLE);
+        binding.fabAdd.setVisibility(View.VISIBLE);
+        binding.childFragmentContainer.setVisibility(View.GONE);
     }
 }
